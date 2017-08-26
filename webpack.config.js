@@ -12,7 +12,8 @@ const config = {
   devServer: {
     publicPath: '/',
     contentBase: './public',
-    historyApiFallback: true
+    historyApiFallback: true,
+    port: 3000
   },
   resolve: {
     extensions: ['.js', '.jsx', '.json']

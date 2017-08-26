@@ -20,7 +20,7 @@
   "scripts": {
     "build:prod": "NODE_ENV='production' webpack -p",
     "build:dev": "NODE_ENV=development webpack -d",
-    "dev": "webpack-dev-server",
+    "start": "webpack-dev-server",
     "watch": "webpack --watch"
   }
 }
