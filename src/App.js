@@ -1,50 +1,30 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { createStore } from 'redux';
+import thunkMiddleware from 'redux-thunk';
+import { createLogger } from 'redux-logger';
+import { createStore, applyMiddleware } from 'redux';
+import { fetchPostsIfNeeded } from './actions';
 import { Provider } from 'react-redux';
 import rootReducer from './reducers';
 
-import Footer from './components/Footer';
-import AddTodo from './containers/AddTodo';
-import VisibleTodoList from './containers/VisibleTodoList';
+const loggerMiddleware = createLogger();
 
-let store = createStore(rootReducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+let store = createStore(
+  rootReducer,
+  applyMiddleware(
+    thunkMiddleware, // lets us dispatch() functions
+    loggerMiddleware // neat middleware that logs actions
+  )
+);
 
-import { addTodo, toggleTodo, setVisibilityFilter, VisibilityFilters } from './actions';
-
-// Log the initial state
-console.log(store.getState());
-
-// Every time the state changes, log it
-// Note that subscribe() returns a function for unregistering the listener
-let unsubscribe = store.subscribe(() => console.log(store.getState()));
-
-// Dispatch some actions
-let time1, time2;
-setTimeout(() => {
-  time1 = Math.floor(Date.now());
-  store.dispatch(addTodo('Learn about actions'));
-}, 1000);
-setTimeout(() => {
-  time2 = Math.floor(Date.now());
-  store.dispatch(addTodo('Learn about reducers'));
-}, 1100);
-setTimeout(() => store.dispatch(addTodo('Learn about store')), 1200);
-setTimeout(() => store.dispatch(toggleTodo(time1)), 1300);
-setTimeout(() => store.dispatch(toggleTodo(time2)), 1400);
-setTimeout(() => store.dispatch(setVisibilityFilter(VisibilityFilters.SHOW_COMPLETED)), 1500);
-
-// Stop listening to state updates
-unsubscribe();
+store.dispatch(fetchPostsIfNeeded('reactjs')).then(() => console.log(store.getState()));
 
 const el = document.getElementById('root');
 
 const App = () =>
   <Provider store={store}>
     <div>
-      <AddTodo />
-      <VisibleTodoList />
-      <Footer />
+      <h1>Hi</h1>
     </div>
   </Provider>;
 
